@@ -1,6 +1,6 @@
-# CF-Server-Monitor · Leon Edition v0.1.0
+# CF-Server-Monitor Speed v0.1.0
 
-这是 Leon Edition 的首版。它基于 [huilang-me 的 CF-Server-Monitor](https://github.com/huilang-me/CF-Server-Monitor)，由 leon4z 独立维护，重点是缩短面板打开后的等待时间。
+这是 CF-Server-Monitor Speed 的首版。它基于 [huilang-me 的 CF-Server-Monitor](https://github.com/huilang-me/CF-Server-Monitor)，由 leon4z 独立维护，重点是缩短面板打开后的等待时间。
 
 ## 首版变化
 

@@ -1,8 +1,8 @@
 {
-  "name": "cf-server-monitor-leon",
+  "name": "cf-server-monitor-speed",
   "private": true,
   "version": "0.1.0",
-  "description": "CF-Server-Monitor - Leon Edition for Cloudflare Workers",
+  "description": "CF-Server-Monitor Speed for Cloudflare Workers",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",

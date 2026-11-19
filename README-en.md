@@ -1,6 +1,6 @@
 <div align="center">
 
-# CF-Server-Monitor · Leon Edition
+# CF-Server-Monitor Speed
 
 A lightweight multi-server monitoring dashboard built on Cloudflare Workers, D1, and Durable Objects.
 
@@ -10,7 +10,7 @@ A lightweight multi-server monitoring dashboard built on Cloudflare Workers, D1,
   <a href="README-en.md">English</a>
 </p>
 
-[v0.1.0 release notes](RELEASE-v0.1.0.md) · [GitHub Releases](https://github.com/leon4z/cf-server-monitor-leon/releases) · [API](API.md) · [Upstream Go Agent guide](https://github.com/huilang-me/cfsm-agent)
+[v0.1.0 release notes](RELEASE-v0.1.0.md) · [GitHub Releases](https://github.com/leon4z/cf-server-monitor-speed/releases) · [API](API.md) · [Upstream Go Agent guide](https://github.com/huilang-me/cfsm-agent)
 
 </div>
 
@@ -116,13 +116,13 @@ For the full Go Agent changelog, see [cfsm-agent releases](https://github.com/hu
 
 You need a Cloudflare account and a unique `API_SECRET` for agent reports and the initial admin login.
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/leon4z/cf-server-monitor-leon)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/leon4z/cf-server-monitor-speed)
 
-In the Cloudflare wizard, use `leon4z/cf-server-monitor-leon` or the copy it creates in your account. For a clean install, use a new Worker and D1 database and enter your own `API_SECRET`. The default Worker is `cf-server-monitor-leon` and the default database is `cf-server-monitor-leon-db`.
+In the Cloudflare wizard, use `leon4z/cf-server-monitor-speed` or the copy it creates in your account. For a clean install, use a new Worker and D1 database and enter your own `API_SECRET`. The default Worker is `cf-server-monitor-speed` and the default database is `cf-server-monitor-speed-db`.
 
 ### Deploy with Wrangler
 
-Install Node.js 22 or newer and download the [v0.1.0 source](https://github.com/leon4z/cf-server-monitor-leon/releases/tag/v0.1.0). From the project directory, run:
+Install Node.js 22 or newer and download the [v0.1.0 source](https://github.com/leon4z/cf-server-monitor-speed/releases/tag/v0.1.0). From the project directory, run:
 
 ```bash
 npm ci
@@ -420,7 +420,7 @@ When scanners keep hitting the monitor domain, every request still counts agains
 **Requirements**
 
 - The domain is hosted on Cloudflare and bound to the Worker.
-- This applies to Leon Edition `v0.1.0` or newer and requires Agent version `1.1.1` or newer.
+- This applies to CF-Server-Monitor Speed `v0.1.0` or newer and requires Agent version `1.1.1` or newer.
 
 **Steps**
 
@@ -485,7 +485,7 @@ Third-party themes only proxy `index.html` and `assets/` from the theme reposito
 
 ### Upgrade Worker
 
-Download the desired version from this project's [GitHub Releases](https://github.com/leon4z/cf-server-monitor-leon/releases), keep the existing Worker name, D1 binding and secrets, then rebuild and deploy. The panel checks this repository for stable releases. The Go Agent uses its upstream installation and update sources.
+Download the desired version from this project's [GitHub Releases](https://github.com/leon4z/cf-server-monitor-speed/releases), keep the existing Worker name, D1 binding and secrets, then rebuild and deploy. The panel checks this repository for stable releases. The Go Agent uses its upstream installation and update sources.
 
 When migrating from the upstream panel, keep the original Worker and a data backup while testing import, history, and Agent reporting on a separate instance.
 
@@ -672,7 +672,7 @@ If the image URL redirects or goes through a CDN redirect, open the browser deve
 
 ### I forgot the admin password
 
-Open the Cloudflare D1 database `cf-server-monitor-leon-db`, edit the `setting` table, and update the `password` field in `site_options`. The legacy MD5-compatible value `e10adc3949ba59abbe56e057f20f883e` maps to password `123456`. Log in with it and set a strong password in the admin panel.
+Open the Cloudflare D1 database `cf-server-monitor-speed-db`, edit the `setting` table, and update the `password` field in `site_options`. The legacy MD5-compatible value `e10adc3949ba59abbe56e057f20f883e` maps to password `123456`. Log in with it and set a strong password in the admin panel.
 
 
 ### Domains not hosted on Cloudflare cannot be bound
@@ -735,7 +735,7 @@ These upstream screenshots show the shared dashboard interface.
 
 ## Feedback
 
-Report issues and suggest improvements for Leon Edition in [this repository](https://github.com/leon4z/cf-server-monitor-leon/issues).
+Report issues and suggest improvements for CF-Server-Monitor Speed in [this repository](https://github.com/leon4z/cf-server-monitor-speed/issues).
 
 ## Credits
 

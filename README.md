@@ -1,6 +1,6 @@
 <div align="center">
 
-# CF-Server-Monitor · Leon Edition
+# CF-Server-Monitor Speed
 
 基于 Cloudflare Workers、D1 和 Durable Objects 的轻量级多服务器监控面板。
 
@@ -10,7 +10,7 @@
   <a href="README-en.md">English</a>
 </p>
 
-[首版 v0.1.0](RELEASE-v0.1.0.md) · [GitHub Releases](https://github.com/leon4z/cf-server-monitor-leon/releases) · [API](API.md) · [上游 Go Agent 文档](https://github.com/huilang-me/cfsm-agent)
+[首版 v0.1.0](RELEASE-v0.1.0.md) · [GitHub Releases](https://github.com/leon4z/cf-server-monitor-speed/releases) · [API](API.md) · [上游 Go Agent 文档](https://github.com/huilang-me/cfsm-agent)
 
 </div>
 
@@ -115,13 +115,13 @@ Go Agent 的完整更新记录见 [cfsm-agent releases](https://github.com/huila
 
 需要 Cloudflare 账户，以及一个独立生成的 `API_SECRET`，用于 Agent 上报和首次后台登录。
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/leon4z/cf-server-monitor-leon)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/leon4z/cf-server-monitor-speed)
 
-在 Cloudflare 的部署向导中确认来源是 `leon4z/cf-server-monitor-leon` 或向导在你账号下创建的副本。首装使用新的 Worker 和 D1 数据库，填入自己的 `API_SECRET`。默认 Worker 名为 `cf-server-monitor-leon`，D1 名为 `cf-server-monitor-leon-db`。
+在 Cloudflare 的部署向导中确认来源是 `leon4z/cf-server-monitor-speed` 或向导在你账号下创建的副本。首装使用新的 Worker 和 D1 数据库，填入自己的 `API_SECRET`。默认 Worker 名为 `cf-server-monitor-speed`，D1 名为 `cf-server-monitor-speed-db`。
 
 ### 使用 Wrangler 部署
 
-安装 Node.js 22 或更高版本，下载 [v0.1.0 源码](https://github.com/leon4z/cf-server-monitor-leon/releases/tag/v0.1.0) 后，在项目根目录执行：
+安装 Node.js 22 或更高版本，下载 [v0.1.0 源码](https://github.com/leon4z/cf-server-monitor-speed/releases/tag/v0.1.0) 后，在项目根目录执行：
 
 ```bash
 npm ci
@@ -419,7 +419,7 @@ smtp://<用户名>:<密码>@<host>:<port>?from=<发件人>&to=<收件人1,收件
 **前提**
 
 - 域名已托管在 Cloudflare 并绑定到 Worker。
-- 适用于 Leon Edition `v0.1.0` 及以上版本，Agent 版本需 ≥ `1.1.1`。
+- 适用于 CF-Server-Monitor Speed `v0.1.0` 及以上版本，Agent 版本需 ≥ `1.1.1`。
 
 **步骤**
 
@@ -484,7 +484,7 @@ smtp://<用户名>:<密码>@<host>:<port>?from=<发件人>&to=<收件人1,收件
 
 ### 升级 Worker
 
-从本仓库的 [GitHub Releases](https://github.com/leon4z/cf-server-monitor-leon/releases) 下载目标版本，复用同一 Worker 的名称、D1 数据库绑定和 Secrets，然后重新构建部署。面板检查本仓库的稳定发行版本。Go Agent 使用上游独立的安装和更新来源。
+从本仓库的 [GitHub Releases](https://github.com/leon4z/cf-server-monitor-speed/releases) 下载目标版本，复用同一 Worker 的名称、D1 数据库绑定和 Secrets，然后重新构建部署。面板检查本仓库的稳定发行版本。Go Agent 使用上游独立的安装和更新来源。
 
 从上游面板迁入前，先保留原 Worker 和数据备份，在独立实例上验证导入、历史和 Agent 上报。
 
@@ -672,7 +672,7 @@ CF-Server-Monitor/
 
 ### 忘记后台密码
 
-进入 Cloudflare D1 数据库 `cf-server-monitor-leon-db`，打开 `setting` 表，编辑 `site_options` 的 `password` 字段。旧版 MD5 兼容值 `e10adc3949ba59abbe56e057f20f883e` 对应密码 `123456`，保存后可用该密码登录，再到后台重新设置强密码。
+进入 Cloudflare D1 数据库 `cf-server-monitor-speed-db`，打开 `setting` 表，编辑 `site_options` 的 `password` 字段。旧版 MD5 兼容值 `e10adc3949ba59abbe56e057f20f883e` 对应密码 `123456`，保存后可用该密码登录，再到后台重新设置强密码。
 
 ### 未托管在CF的域名不能绑定
 
@@ -734,7 +734,7 @@ echo <CF_CDN_IP> <你的探针域名> | sudo tee -a /etc/hosts
 
 ## 反馈
 
-Leon Edition 的问题或建议请提交到 [本仓库 Issues](https://github.com/leon4z/cf-server-monitor-leon/issues)。
+CF-Server-Monitor Speed 的问题或建议请提交到 [本仓库 Issues](https://github.com/leon4z/cf-server-monitor-speed/issues)。
 
 ## 致谢
 

@@ -1,5 +1,5 @@
 # Cloudflare Workers 发布与本地开发共用配置
-name = "cf-server-monitor-leon"
+name = "cf-server-monitor-speed"
 main = "src/index.js"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
@@ -19,7 +19,7 @@ binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "cf-server-monitor-leon-db"
+database_name = "cf-server-monitor-speed-db"
 
 # Durable Objects：实时指标广播中心
 # 首次部署由下方 SQLite 迁移创建命名空间。

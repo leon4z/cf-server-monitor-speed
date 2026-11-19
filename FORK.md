@@ -1,11 +1,11 @@
 # Project lineage
 
-CF-Server-Monitor · Leon Edition is maintained independently by leon4z.
+CF-Server-Monitor Speed is maintained independently by leon4z.
 
 - Upstream source: https://github.com/huilang-me/CF-Server-Monitor
 - Upstream baseline: `1be24f0eabdcc2d06c215c45258382b02e438b49`
 - Personal fork base for v0.1.0: `82477f446a9f15ad62c80bb369e93a612c703826` from `leon4z/CF-Server-Monitor:personal`
-- Independent repository: https://github.com/leon4z/cf-server-monitor-leon
+- Independent repository: https://github.com/leon4z/cf-server-monitor-speed
 
 ## Changes
 

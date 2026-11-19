@@ -62,7 +62,7 @@ test('startup config stays responsive while the authenticated version request is
     assert.equal(config.last_workers_version, null);
 
     assert.deepEqual(pending.map(item => item.url), [
-      'https://api.github.com/repos/leon4z/cf-server-monitor-leon/releases/latest',
+      'https://api.github.com/repos/leon4z/cf-server-monitor-speed/releases/latest',
       'https://api.github.com/repos/huilang-me/cfsm-agent/releases/latest'
     ]);
     pending[0].resolve(Response.json({ tag_name: 'v9.0.0' }));
