@@ -122,7 +122,7 @@ In the Cloudflare wizard, use `leon4z/cf-server-monitor-speed` or the copy it cr
 
 ### Deploy with Wrangler
 
-Install Node.js 22 or newer and download the [v0.1.0 source](https://github.com/leon4z/cf-server-monitor-speed/releases/tag/v0.1.0). From the project directory, run:
+Install Node.js 22 or newer and download the [latest release source](https://github.com/leon4z/cf-server-monitor-speed/releases/latest). From the project directory, run:
 
 ```bash
 npm ci
@@ -745,7 +745,7 @@ Report issues and suggest improvements for CF-Server-Monitor Speed in [this repo
 - [Vite](https://vite.dev/)
 - [Chart.js](https://www.chartjs.org/)
 - [Leaflet](https://leafletjs.com/)
-- Thanks to the [NodeSeek](https://www.nodeseek.com/post-763025-1) and [LINUX DO](https://linux.do/) communities for support and promotion
+- Thanks to the [NodeSeek](https://www.nodeseek.com/post-763025-1) and [LINUX DO](https://linux.do/) communities for supporting and promoting the upstream CF-Server-Monitor project.
 
 ## License
 

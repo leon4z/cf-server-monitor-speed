@@ -1,7 +1,7 @@
 {
   "name": "cf-server-monitor-speed",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CF-Server-Monitor Speed for Cloudflare Workers",
   "type": "module",
   "scripts": {

@@ -121,7 +121,7 @@ Go Agent 的完整更新记录见 [cfsm-agent releases](https://github.com/huila
 
 ### 使用 Wrangler 部署
 
-安装 Node.js 22 或更高版本，下载 [v0.1.0 源码](https://github.com/leon4z/cf-server-monitor-speed/releases/tag/v0.1.0) 后，在项目根目录执行：
+安装 Node.js 22 或更高版本，下载 [最新发行版源码](https://github.com/leon4z/cf-server-monitor-speed/releases/latest) 后，在项目根目录执行：
 
 ```bash
 npm ci
@@ -744,7 +744,7 @@ CF-Server-Monitor Speed 的问题或建议请提交到 [本仓库 Issues](https:
 - [Vite](https://vite.dev/)
 - [Chart.js](https://www.chartjs.org/)
 - [Leaflet](https://leafletjs.com/)
-- 感谢 [NodeSeek](https://www.nodeseek.com/post-763025-1) 和 [LINUX DO](https://linux.do/) 社区的支持与推广
+- 感谢 [NodeSeek](https://www.nodeseek.com/post-763025-1) 和 [LINUX DO](https://linux.do/) 社区对上游项目 CF-Server-Monitor 的支持与推广。
 
 ## 许可证
 

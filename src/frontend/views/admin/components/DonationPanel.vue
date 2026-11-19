@@ -7,7 +7,7 @@
         <div class="donation-copy">
           <p>{{ trans.donationDesc }}</p>
           <p>
-            <a href="https://github.com/huilang-me/CF-Server-Monitor#支持项目" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/huilang-me/CF-Server-Monitor" target="_blank" rel="noopener noreferrer">
               huilang-me/CF-Server-Monitor
             </a>
           </p>
