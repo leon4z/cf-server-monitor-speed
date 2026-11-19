@@ -376,8 +376,7 @@ fs.writeFileSync(outputPath, sql);
 
 console.log('✅ SQL 文件生成成功:', outputPath);
 console.log('\n📝 使用说明:');
-console.log('  1. 确保你有 wrangler.toml 配置好 D1 数据库');
-console.log('  2. 创建本地 D1 数据库: wrangler d1 create server-monitor-db');
-console.log('  3. 初始化数据库结构（如果还没）: 访问一次 http://localhost:8787');
-console.log('  4. 或者直接执行 SQL: wrangler d1 execute server-monitor-db --file=test/mock-data.sql');
-console.log('  5. 然后运行: npm run dev');
+console.log('  1. 按 README 配置 .dev.vars 并构建前端，再运行 npm run dev');
+console.log('  2. 访问 https://localhost:8787/api/config 初始化本地数据库后停止 dev');
+console.log('  3. 导入数据: npm exec -- wrangler d1 execute DB --local --file=test/mock-data.sql');
+console.log('  4. 重新运行 npm run dev 查看数据');

@@ -1,8 +1,11 @@
+import version from '../../version.json' with { type: 'json' };
+import { PROJECT_NAME } from './project.js';
+
 // 当前 Worker 版本：/api/config 返回给前端与主题，用于页脚和升级提示。
-export const CURRENT_VERSION = '2.8.8 Beta1';
+export const CURRENT_VERSION = version.workers;
 
 // 站点设置默认值与缓存策略。
-export const DEFAULT_SITE_TITLE = 'Cloudflare Server Monitor';
+export const DEFAULT_SITE_TITLE = PROJECT_NAME;
 export const SITE_SETTINGS_CACHE_TTL_MS = 120 * 1000;
 export const JWT_SECRET_MIN_LENGTH = 32;
 

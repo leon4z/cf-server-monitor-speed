@@ -17,12 +17,13 @@
         role="tooltip"
       >{{ updateTitle }}</span>
     </span>
-    <span>Powered by <a href="https://github.com/huilang-me/CF-Server-Monitor" target="_blank">CF-Server-Monitor</a></span>
+    <span>Powered by <a :href="PROJECT_URL" target="_blank" rel="noopener noreferrer">{{ PROJECT_NAME }}</a></span>
   </footer>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { PROJECT_NAME, PROJECT_URL } from '../../utils/project.js'
 import { LAST_WORKERS_VERSION, VERSION } from '../utils/api'
 import { useTranslation } from '../utils/i18n'
 

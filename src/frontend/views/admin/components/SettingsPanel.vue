@@ -7,7 +7,7 @@
         <div class="form-row">
           <div class="form-group flex-1">
             <label class="form-label">{{ trans.siteTitle }}</label>
-            <input type="text" v-model="settings.site_title" class="form-input" :placeholder="'Cloudflare Server Monitor'">
+            <input type="text" v-model="settings.site_title" class="form-input" :placeholder="DEFAULT_SITE_TITLE">
           </div>
 
           <div class="form-group flex-1">
@@ -890,7 +890,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import HelpTooltip from '../../../components/HelpTooltip.vue'
-import { FRONTEND_WS_TIMEOUT_MINUTES_MAX, HISTORY } from '../../../utils/constants.js'
+import { DEFAULT_SITE_TITLE, FRONTEND_WS_TIMEOUT_MINUTES_MAX, HISTORY } from '../../../utils/constants.js'
 import { PING_NODE_FIELDS, validatePingNode } from '../../../utils/pingNode.js'
 import { LANGUAGES, LANGUAGE_MAP } from '../../../locales'
 import { NOTIFICATION_LANGUAGE_CODES } from '../../../../shared/languages.js'

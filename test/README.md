@@ -17,16 +17,16 @@
 2. **初始化数据库结构**
    （如果数据库是空的，先启动一次 dev 来自动创建表）
    ```bash
-   # 在项目根目录
+   # 先按主 README 配置 .dev.vars，并构建前端
    npm run dev
-   # 访问一次 http://localhost:8787 会自动初始化表结构
+   # 访问一次 https://localhost:8787/api/config 会初始化本地表结构
    # 然后按 Ctrl+C 停止
    ```
 
 3. **导入模拟数据**
    ```bash
    # 执行 SQL 导入数据
-   wrangler d1 execute server-monitor-db --file=test/mock-data.sql
+   npm exec -- wrangler d1 execute DB --local --file=test/mock-data.sql
    ```
 
 4. **启动本地开发服务器**
@@ -35,9 +35,9 @@
    ```
 
 5. **访问界面**
-   - 首页仪表盘: http://localhost:8787
-   - 服务器详情页: http://localhost:8787/?id=s550e8400-e29b-41d4-a716-446655440001
-   - 后台管理: http://localhost:8787/admin
+   - 首页仪表盘: https://localhost:8787
+   - 服务器详情页: https://localhost:8787/?id=s550e8400-e29b-41d4-a716-446655440001
+   - 后台管理: https://localhost:8787/admin
 
 ## 模拟数据说明
 

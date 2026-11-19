@@ -1,5 +1,8 @@
-const REMOTE_VERSION_URL = 'https://raw.githubusercontent.com/huilang-me/CF-Server-Monitor/refs/heads/main/version.json';
+import { PROJECT_REPOSITORY } from './project.js';
+
+const PANEL_RELEASE_URL = `https://api.github.com/repos/${PROJECT_REPOSITORY}/releases/latest`;
 const AGENT_RELEASE_URL = 'https://api.github.com/repos/huilang-me/cfsm-agent/releases/latest';
+const GITHUB_HEADERS = { Accept: 'application/vnd.github+json', 'User-Agent': PROJECT_REPOSITORY };
 const REMOTE_VERSION_TTL = 10 * 60 * 1000;
 const REMOTE_VERSION_FAILURE_TTL = 30 * 1000;
 const REMOTE_VERSION_FETCH_TIMEOUT_MS = 2000;
@@ -36,16 +39,18 @@ export async function getRemoteVersion() {
 async function fetchRemoteVersion(now) {
   try {
     const [versionRes, releaseRes] = await Promise.allSettled([
-      fetchWithTimeout(REMOTE_VERSION_URL, { headers: { Accept: 'application/json' } }),
-      fetchWithTimeout(AGENT_RELEASE_URL, { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'CF-Server-Monitor' } })
+      fetchWithTimeout(PANEL_RELEASE_URL, { headers: GITHUB_HEADERS }),
+      fetchWithTimeout(AGENT_RELEASE_URL, { headers: GITHUB_HEADERS })
     ]);
 
     let workers;
     let agent;
 
     if (versionRes.status === 'fulfilled' && versionRes.value.ok) {
-      const data = await versionRes.value.json();
-      workers = typeof data.workers === 'string' ? data.workers : '';
+      const release = await versionRes.value.json();
+      if (typeof release?.tag_name === 'string') {
+        workers = /^v(\d+\.\d+\.\d+)$/.exec(release.tag_name)?.[1];
+      }
     }
 
     if (releaseRes.status === 'fulfilled' && releaseRes.value.ok) {

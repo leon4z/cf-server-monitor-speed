@@ -1,11 +1,11 @@
-# Personal fork
+# Project lineage
 
-Fork: https://github.com/leon4z/CF-Server-Monitor
+CF-Server-Monitor · Leon Edition is maintained independently by leon4z.
 
-Upstream: https://github.com/huilang-me/CF-Server-Monitor
-
-Maintained branch: `personal`. `main` is an upstream baseline, currently
-`1be24f0eabdcc2d06c215c45258382b02e438b49` (2026-11-13).
+- Upstream source: https://github.com/huilang-me/CF-Server-Monitor
+- Upstream baseline: `1be24f0eabdcc2d06c215c45258382b02e438b49`
+- Personal fork base for v0.1.0: `82477f446a9f15ad62c80bb369e93a612c703826` from `leon4z/CF-Server-Monitor:personal`
+- Independent repository: https://github.com/leon4z/cf-server-monitor-leon
 
 ## Changes
 
@@ -115,19 +115,8 @@ not merely card elements underneath a full-screen loading overlay.
 
 ## Deployment and maintenance
 
-Source and deployment are maintained separately. No production configuration,
-credentials, binding IDs, domain, host inventory or database
-export is stored here. This fork's Actions are currently disabled in repository
-settings, so pushing this branch does not deploy Workers or Pages or sync main.
-Manual production deployments are recorded privately and require explicit
-authorization; no upstream PR is triggered by maintaining this branch.
+See the [deployment instructions](README.md#快速部署) and [v0.1.0 notes](RELEASE-v0.1.0.md).
+The dashboard checks stable GitHub Releases in the independent repository. The Go Agent and theme catalog remain upstream dependencies.
+Authorised deployment credentials belong in each operator’s environment. The verification workflow runs tests, builds, and bundles a dry-run Worker.
 
-Before a future deployment, review the upstream delta as well as these patches,
-use the existing deployment's bindings and secrets, and keep its data intact.
-A local build is not evidence of production latency improvement. Deployment
-requires a separate explicit instruction.
-
-To take upstream changes, fetch `upstream`, merge the reviewed upstream commit
-into `personal`, resolve conflicts without dropping these patches, then repeat
-the tests and build. Do not automatically reset `personal` to upstream or enable
-upstream sync/deployment workflows as part of updating source.
+To take a change from upstream, fetch the upstream repository and review the commits before merging or cherry-picking them. Run the checks above and verify the release paths and licenses before tagging a new version.

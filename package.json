@@ -1,7 +1,8 @@
 {
-  "name": "cf-server-monitor",
-  "version": "2.8.7",
-  "description": "Cloudflare Workers Server Monitor - 多服务器监控探针",
+  "name": "cf-server-monitor-leon",
+  "private": true,
+  "version": "0.1.0",
+  "description": "CF-Server-Monitor - Leon Edition for Cloudflare Workers",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
@@ -41,6 +42,6 @@
     "vue-router": "^4.4.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   }
 }

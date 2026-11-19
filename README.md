@@ -1,6 +1,6 @@
 <div align="center">
 
-# CF-Server-Monitor
+# CF-Server-Monitor · Leon Edition
 
 基于 Cloudflare Workers、D1 和 Durable Objects 的轻量级多服务器监控面板。
 
@@ -10,18 +10,15 @@
   <a href="README-en.md">English</a>
 </p>
 
-[![Workers](https://img.shields.io/badge/Workers-2.8.8%20Beta1-f38020?style=flat-square&logo=cloudflare&logoColor=white)](version.json)
-[![GitHub Stars](https://img.shields.io/github/stars/huilang-me/CF-Server-Monitor?style=flat-square&logo=github)](https://github.com/huilang-me/CF-Server-Monitor/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/huilang-me/CF-Server-Monitor?style=flat-square&logo=github)](https://github.com/huilang-me/CF-Server-Monitor/forks)
-[![License](https://img.shields.io/badge/License-MIT-16a34a?style=flat-square)](#许可证)
-
-[在线演示](https://demo.huilang.me/) · [API 文档](API.md) · [Go 探针文档](https://github.com/huilang-me/cfsm-agent) · [主题开发](theme-develop.md) · [主题开发 AI 提示词](theme-ai-prompt.md)
+[首版 v0.1.0](RELEASE-v0.1.0.md) · [GitHub Releases](https://github.com/leon4z/cf-server-monitor-leon/releases) · [API](API.md) · [上游 Go Agent 文档](https://github.com/huilang-me/cfsm-agent)
 
 </div>
 
 ## 项目简介
 
-CF-Server-Monitor 是一个部署在 Cloudflare Workers 上的服务器监控系统。服务器端安装 Agent 后会单向上报指标到 Worker，数据写入 D1，并通过 Durable Objects + WebSocket 推送到前端，实现免费托管、低维护的实时监控。
+由 **leon4z** 独立维护，基于 [huilang-me 的 CF-Server-Monitor](https://github.com/huilang-me/CF-Server-Monitor)。这个版本侧重缩短面板打开后到首屏可用的时间，以及让多台主机更快显示已有监控指标。
+
+这是一个部署在 Cloudflare Workers 上的服务器监控系统。服务器端安装 Agent 后会单向上报指标到 Worker，数据写入 D1，并通过 Durable Objects + WebSocket 推送到前端，实现免费托管、低维护的实时监控。
 
 支持主流 Linux 发行版、Alpine Linux、OpenWrt、macOS、群晖 DSM、飞牛 fnOS、Windows 等系统，并提供 Docker 镜像部署方式。
 
@@ -45,7 +42,7 @@ CF-Server-Monitor 是一个部署在 Cloudflare Workers 上的服务器监控系
 - [项目结构](#项目结构)
 - [常见问题](#常见问题)
 - [界面预览](#界面预览)
-- [支持项目](#支持项目)
+- [反馈](#反馈)
 
 ## 对比优势
 
@@ -97,7 +94,9 @@ flowchart LR
 
 ## 版本说明
 
-近期变化：
+独立面板版本从 [v0.1.0](RELEASE-v0.1.0.md) 开始。首发兼容现场验证过的上游 Go Agent `v1.1.3`。
+
+以下是继承自上游基线的功能记录。
 
 - `2.8.8`：登录下发 cfsm_ua Cookie 供 Cloudflare 安全规则放行；新增APP Password用于第三方 App / iOS 小组件获得更多权限，同时绕过Turnstile。
 - `2.8.7`：优化定时任务逻辑，降低CPU负载，避免超出免费额度限制；`/update` 增加 512KB 请求体上限，超限直接返回 413；服务器被删除后，其 Agent 的 WSS 连接会在 2 分钟内自动断开；WSS 上报增加帧大小校验，D1 抖动时不再中断已认证会话；批量样本只保留最新 300 条。新增服务端自动发现机制自动绑定服务器ID。新增自定义UA；导入导出包含设置选项；资源负载告警新增 TCP/UDP 连接数监控。上报未探到公网 IP 时用请求头来源地址补位。
@@ -114,59 +113,24 @@ Go Agent 的完整更新记录见 [cfsm-agent releases](https://github.com/huila
 
 ## 快速部署
 
-### 前置要求
+需要 Cloudflare 账户，以及一个独立生成的 `API_SECRET`，用于 Agent 上报和首次后台登录。
 
-- Cloudflare 账户
-- GitHub 账户
-- 一个足够复杂的 `API_SECRET`，同时作为 Agent 上报密钥和初始后台密码
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/leon4z/cf-server-monitor-leon)
 
-建议优先使用「Cloudflare Workers 连接 GitHub 仓库」或「GitHub Actions 自动部署」。一键部署适合快速体验，但后续同步更新不够方便。
+在 Cloudflare 的部署向导中确认来源是 `leon4z/cf-server-monitor-leon` 或向导在你账号下创建的副本。首装使用新的 Worker 和 D1 数据库，填入自己的 `API_SECRET`。默认 Worker 名为 `cf-server-monitor-leon`，D1 名为 `cf-server-monitor-leon-db`。
 
-### 方式一：Cloudflare Workers 连接 GitHub 仓库
+### 使用 Wrangler 部署
 
-这是推荐方式，适合希望通过 Cloudflare 控制台自动构建和重新部署的用户。
+安装 Node.js 22 或更高版本，下载 [v0.1.0 源码](https://github.com/leon4z/cf-server-monitor-leon/releases/tag/v0.1.0) 后，在项目根目录执行：
 
-图文教程：<https://huilang.me/cf-server-monitor-setup/>
+```bash
+npm ci
+npm exec -- wrangler login
+npm run deploy
+npm exec -- wrangler secret put API_SECRET
+```
 
-1. 打开项目地址[CF-Server-Monitor](https://github.com/huilang-me/CF-Server-Monitor/), 老规矩，右上角来个Star，然后点[Fork](https://github.com/huilang-me/CF-Server-Monitor/fork)
-2. 进入 Cloudflare Dashboard，打开 [Workers & Pages](https://dash.cloudflare.com/?to=/:account/workers-and-pages)。
-3. [创建 Worker](https://dash.cloudflare.com/?to=/:account/workers-and-pages/create)，并选择从 GitHub 仓库导入本项目。
-4. 构建命令填写 `npm run build:frontend`。
-5. 部署命令使用 `npx wrangler deploy`。
-6. 部署完成后，在 Worker 的 Variables and Secrets 中添加 `API_SECRET`。
-
-### 方式二：GitHub Actions 自动部署
-
-适合希望把部署流程完全托管在 GitHub Actions 的用户。
-
-1. Fork 本仓库。
-2. 在 Cloudflare 创建 D1 数据库，名称建议为 `server-monitor-db`。
-3. 复制 Cloudflare Account ID。
-4. 创建 Cloudflare API Token，至少需要 Workers 编辑和 D1 部署相关权限。
-5. 在 Fork 后的 GitHub 仓库中进入 Settings -> Secrets and variables -> Actions。
-6. 添加以下 Secrets。
-
-| Secret                 | 必填 | 说明                       |
-| ---------------------- | -- | ------------------------ |
-| `CF_API_TOKEN`         | 是  | Cloudflare API Token     |
-| `CF_ACCOUNT_ID`        | 是  | Cloudflare Account ID    |
-| `D1_DATABASE_ID`       | 是  | D1 数据库 ID                |
-| `API_SECRET`           | 是  | Agent 上报密钥和初始后台密码        |
-| `CORS_ALLOWED_ORIGINS` | 否  | 允许跨域访问 API 的来源，多个用英文逗号分隔 |
-
-推送到 `main` 分支会自动部署，也可以在 Actions 页面手动运行 `Deploy to Cloudflare Workers` 工作流。
-
-### 方式三：一键部署
-
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/huilang-me/CF-Server-Monitor)
-
-部署时请确认：
-
-- Build command 使用 `npm run build:frontend`
-- `API_SECRET` 改为随机强密码，不要继续使用默认值
-- 登录后台后尽快修改管理员用户名和密码
-
-一键部署不方便长期同步上游更新，正式使用更建议迁移到方式一或方式二。
+`npm run deploy` 会构建前端并部署 Worker。Wrangler 使用 `wrangler.toml` 中的 D1 及 Durable Object 绑定。首次部署到已有同名资源的 Cloudflare 账户时，先为新实例设置自己的 Worker 和数据库名称。部署后从 `/admin` 登录，完成首次登录设置再添加主机。
 
 ## 首次使用
 
@@ -455,7 +419,7 @@ smtp://<用户名>:<密码>@<host>:<port>?from=<发件人>&to=<收件人1,收件
 **前提**
 
 - 域名已托管在 Cloudflare 并绑定到 Worker。
-- Agent 版本 ≥ `1.1.1`，Workers 版本 ≥ `2.8.7`。
+- 适用于 Leon Edition `v0.1.0` 及以上版本，Agent 版本需 ≥ `1.1.1`。
 
 **步骤**
 
@@ -520,12 +484,9 @@ smtp://<用户名>:<密码>@<host>:<port>?from=<发件人>&to=<收件人1,收件
 
 ### 升级 Worker
 
-如果通过 Fork 部署，同步上游仓库即可触发重新部署：
+从本仓库的 [GitHub Releases](https://github.com/leon4z/cf-server-monitor-leon/releases) 下载目标版本，复用同一 Worker 的名称、D1 数据库绑定和 Secrets，然后重新构建部署。面板检查本仓库的稳定发行版本。Go Agent 使用上游独立的安装和更新来源。
 
-- 手动同步：GitHub 仓库页面点击 Sync fork -> Update branch。
-- 自动同步：启用 `Upstream Sync` 工作流，默认每天 UTC 00:00 检查上游更新。
-
-一键部署方式建议重新部署到同一个项目，或迁移到 Fork + GitHub / Cloudflare 自动部署模式。
+从上游面板迁入前，先保留原 Worker 和数据备份，在独立实例上验证导入、历史和 Agent 上报。
 
 ### 升级 Agent
 
@@ -594,7 +555,7 @@ Go 版本和旧 Shell / PowerShell 版本卸载脚本只清理各自安装的服
 
 ### 环境要求
 
-- Node.js 18+
+- Node.js 22+
 - npm
 - Wrangler 4
 
@@ -602,19 +563,20 @@ Go 版本和旧 Shell / PowerShell 版本卸载脚本只清理各自安装的服
 
 ```bash
 # 安装依赖
-npm install
+npm ci
 
-# 首次创建 D1 数据库
-npx wrangler d1 create server-monitor-db
+# 为本地 Worker 设置 API_SECRET
+cp .dev.vars.example .dev.vars
+# 在 .dev.vars 中填写专用于开发的 API_SECRET
+
+# 构建 Worker 的静态资源
+npm run build:frontend
 
 # 启动本地 Worker，默认 https://localhost:8787
 npm run dev
 
-# 单独启动前端 Vite，默认 http://localhost:5173
+# 单独启动前端 Vite，默认 https://localhost:5173
 npm run dev:frontend
-
-# 构建前端
-npm run build:frontend
 
 # 部署到 Cloudflare Workers
 npm run deploy
@@ -626,17 +588,13 @@ npm run test:history-query
 npm run test:agent-config
 ```
 
-本地 `.env` 至少需要：
-
-```bash
-API_SECRET=123456
-```
+在本地 `.dev.vars` 中填写专用于开发的 `API_SECRET`。前端 Vite 默认使用 HTTPS。
 
 ### 测试数据
 
 ```bash
 node test/generate-sql.js
-wrangler d1 execute server-monitor-db --file=test/mock-data.sql
+npm exec -- wrangler d1 execute DB --local --file=test/mock-data.sql
 ```
 
 更多本地测试说明见 [test/README.md](test/README.md)。
@@ -700,7 +658,7 @@ CF-Server-Monitor/
 
 ### 如何更换 `API_SECRET`
 
-在 Cloudflare 中修改 `API_SECRET`，重新部署 Worker，然后在所有服务器上重新复制并执行安装命令。使用 GitHub Actions 部署时，也要同步更新 GitHub Secret。
+在 Cloudflare 中修改 `API_SECRET` 并重新部署 Worker，然后在所有被监控的服务器上重新复制并执行 Agent 安装命令。
 
 ### D1 免费额度够用吗
 
@@ -714,7 +672,7 @@ CF-Server-Monitor/
 
 ### 忘记后台密码
 
-进入 Cloudflare D1 数据库 `server-monitor-db`，打开 `setting` 表，编辑 `site_options` 的 `password` 字段。旧版 MD5 兼容值 `e10adc3949ba59abbe56e057f20f883e` 对应密码 `123456`，保存后可用该密码登录，再到后台重新设置强密码。
+进入 Cloudflare D1 数据库 `cf-server-monitor-leon-db`，打开 `setting` 表，编辑 `site_options` 的 `password` 字段。旧版 MD5 兼容值 `e10adc3949ba59abbe56e057f20f883e` 对应密码 `123456`，保存后可用该密码登录，再到后台重新设置强密码。
 
 ### 未托管在CF的域名不能绑定
 
@@ -739,6 +697,8 @@ echo <CF_CDN_IP> <你的探针域名> | sudo tee -a /etc/hosts
 前端会并列展示港澳台和国家/地区信息。地图基于中华人民共和国自然资源部标准地图制作，审图号：GS(2023)2767 号。
 
 ## 界面预览
+
+以下截图来自原项目，展示双方共有的基础界面。
 
 <details>
 <summary>深色风格</summary>
@@ -772,24 +732,9 @@ echo <CF_CDN_IP> <你的探针域名> | sudo tee -a /etc/hosts
 - [theme-ai-prompt.md](theme-ai-prompt.md)：主题开发 AI 提示词，直接粘贴给 AI 即可按项目规范开发主题
 - [test/README.md](test/README.md)：本地模拟数据和测试流程
 
-## 社区
+## 反馈
 
-- Telegram 群组：<https://t.me/cfServerMonitor>
-- 在线演示：<https://demo.huilang.me/>
-
-## 支持项目
-
-如果这个项目对你有帮助，欢迎通过以下方式支持后续维护。
-
-<p>
-  <img src="./donate/wechat-reward.jpg" alt="微信赞赏码" width="215">
-</p>
-
-- 微信赞赏：扫码支持
-
-### 合作与推荐
-
-如果你需要粤港澳大湾区的机场接送、商务用车或私人包车服务，可参考 [Hong Kong Chauffeur](https://hkchauffeur.com/)，覆盖香港、深圳、广州、珠海、澳门等地区。
+Leon Edition 的问题或建议请提交到 [本仓库 Issues](https://github.com/leon4z/cf-server-monitor-leon/issues)。
 
 ## 致谢
 
@@ -803,4 +748,4 @@ echo <CF_CDN_IP> <你的探针域名> | sudo tee -a /etc/hosts
 
 ## 许可证
 
-MIT License
+[MIT License](LICENSE)。保留原项目版权声明。字体授权随 [JetBrains Mono 许可文本](public/files/jetbrains-mono-OFL.txt) 一并提供。

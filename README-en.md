@@ -1,6 +1,6 @@
 <div align="center">
 
-# CF-Server-Monitor
+# CF-Server-Monitor · Leon Edition
 
 A lightweight multi-server monitoring dashboard built on Cloudflare Workers, D1, and Durable Objects.
 
@@ -10,18 +10,15 @@ A lightweight multi-server monitoring dashboard built on Cloudflare Workers, D1,
   <a href="README-en.md">English</a>
 </p>
 
-[![Workers](https://img.shields.io/badge/Workers-2.8.8%20Beta1-f38020?style=flat-square&logo=cloudflare&logoColor=white)](version.json)
-[![GitHub Stars](https://img.shields.io/github/stars/huilang-me/CF-Server-Monitor?style=flat-square&logo=github)](https://github.com/huilang-me/CF-Server-Monitor/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/huilang-me/CF-Server-Monitor?style=flat-square&logo=github)](https://github.com/huilang-me/CF-Server-Monitor/forks)
-[![License](https://img.shields.io/badge/License-MIT-16a34a?style=flat-square)](#license)
-
-[Live Demo](https://demo.huilang.me/) · [API Reference](API.md) · [Go Agent Guide](https://github.com/huilang-me/cfsm-agent) · [Theme Development](theme-develop.md) · [Theme AI Prompt](theme-ai-prompt.md)
+[v0.1.0 release notes](RELEASE-v0.1.0.md) · [GitHub Releases](https://github.com/leon4z/cf-server-monitor-leon/releases) · [API](API.md) · [Upstream Go Agent guide](https://github.com/huilang-me/cfsm-agent)
 
 </div>
 
 ## Overview
 
-CF-Server-Monitor is a server monitoring system designed for Cloudflare Workers. Each server runs an Agent that reports metrics to a Worker. The Worker stores data in D1 and pushes realtime updates through Durable Objects and WebSocket, providing free-hosted, low-maintenance realtime monitoring.
+Independently maintained by **leon4z**, based on [CF-Server-Monitor by huilang-me](https://github.com/huilang-me/CF-Server-Monitor). This edition focuses on a faster usable dashboard and earlier display of available metrics across hosts.
+
+The project is a server monitoring system designed for Cloudflare Workers. Each server runs an Agent that reports metrics to a Worker. The Worker stores data in D1 and pushes realtime updates through Durable Objects and WebSocket, providing free-hosted, low-maintenance realtime monitoring.
 
 It supports mainstream Linux distributions, Alpine Linux, OpenWrt, macOS, Synology DSM, Feiniu fnOS, Windows, and similar systems, and provides Docker image deployment.
 
@@ -45,7 +42,7 @@ Security is stricter by design: the Agent only reports metrics one way, does not
 - [Project Structure](#project-structure)
 - [FAQ](#faq)
 - [Screenshots](#screenshots)
-- [Support](#support)
+- [Feedback](#feedback)
 
 ## Why CF-Server-Monitor
 
@@ -98,7 +95,9 @@ Core flow:
 
 ## Version Notes
 
-Recent changes:
+The independent panel starts at [v0.1.0](RELEASE-v0.1.0.md). The release uses the upstream Go Agent `v1.1.3` validated on the original deployment.
+
+Changes inherited from the upstream baseline:
 
 - `2.8.8`: Login now issues a `cfsm_ua` cookie so Cloudflare security rules can let the browser through; added an App Password for third-party apps / iOS widgets to gain additional read access while bypassing Turnstile.
 - `2.8.7`: Optimized scheduled task logic to reduce CPU usage and avoid exceeding free-tier limits. `/update` now enforces a 512KB body limit and returns 413 beyond it; Agent WSS connections for deleted servers are closed within 2 minutes; WSS reports now validate frame size and authenticated sessions survive transient D1 errors; batched samples keep only the latest 300. Added a server-side auto-discovery mechanism to automatically bind the server ID. Add custom User-Agent.Import and export include settings options. Resource alerts now support TCP/UDP connection counts. When no public IP is reported, fall back to the request header's source address.
@@ -115,59 +114,24 @@ For the full Go Agent changelog, see [cfsm-agent releases](https://github.com/hu
 
 ## Quick Deployment
 
-### Requirements
+You need a Cloudflare account and a unique `API_SECRET` for agent reports and the initial admin login.
 
-- Cloudflare account
-- GitHub account
-- A strong `API_SECRET`, used as the Agent reporting secret and the initial admin password
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/leon4z/cf-server-monitor-leon)
 
-The recommended deployment paths are Cloudflare Workers connected to GitHub, or GitHub Actions. One-click deploy is useful for trials, but it is less convenient for long-term updates.
+In the Cloudflare wizard, use `leon4z/cf-server-monitor-leon` or the copy it creates in your account. For a clean install, use a new Worker and D1 database and enter your own `API_SECRET`. The default Worker is `cf-server-monitor-leon` and the default database is `cf-server-monitor-leon-db`.
 
-### Option 1: Cloudflare Workers Connected to GitHub
+### Deploy with Wrangler
 
-Recommended for users who want Cloudflare to build and redeploy the project from a GitHub fork.
+Install Node.js 22 or newer and download the [v0.1.0 source](https://github.com/leon4z/cf-server-monitor-leon/releases/tag/v0.1.0). From the project directory, run:
 
-1. Fork this repository.
-2. Open Cloudflare Dashboard and go to Workers & Pages.
-3. Create a Worker and import this repository from GitHub.
-4. Set the build command to `npm run build:frontend`.
-5. Use `npx wrangler deploy` as the deploy command.
-6. After deployment, add `API_SECRET` in the Worker's Variables and Secrets.
+```bash
+npm ci
+npm exec -- wrangler login
+npm run deploy
+npm exec -- wrangler secret put API_SECRET
+```
 
-Chinese visual guide: <https://huilang.me/cf-server-monitor-setup/>
-
-### Option 2: GitHub Actions Deployment
-
-Recommended if you want GitHub Actions to own the full deployment workflow.
-
-1. Fork this repository.
-2. Create a Cloudflare D1 database, preferably named `server-monitor-db`.
-3. Copy your Cloudflare Account ID.
-4. Create a Cloudflare API Token with the required Workers and D1 deployment permissions.
-5. In your forked repository, open Settings -> Secrets and variables -> Actions.
-6. Add the following repository secrets.
-
-| Secret | Required | Description |
-| --- | --- | --- |
-| `CF_API_TOKEN` | Yes | Cloudflare API Token |
-| `CF_ACCOUNT_ID` | Yes | Cloudflare Account ID |
-| `D1_DATABASE_ID` | Yes | D1 database ID |
-| `API_SECRET` | Yes | Agent reporting secret and initial admin password |
-| `CORS_ALLOWED_ORIGINS` | No | Allowed API origins, comma-separated |
-
-Pushing to `main` triggers deployment. You can also manually run the `Deploy to Cloudflare Workers` workflow from the Actions tab.
-
-### Option 3: One-Click Deploy
-
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/huilang-me/CF-Server-Monitor)
-
-Before deploying:
-
-- Use `npm run build:frontend` as the build command.
-- Replace the default `API_SECRET` with a random strong value.
-- Change the admin username and password after the first login.
-
-For long-term use, migrating to Option 1 or Option 2 is recommended.
+`npm run deploy` builds the frontend and deploys the Worker. Wrangler uses the D1 and Durable Object bindings in `wrangler.toml`. Pick new resource names for a fresh install in an account that already contains resources with these names. Open `/admin` and complete initial login before adding hosts.
 
 ## First Use
 
@@ -456,7 +420,7 @@ When scanners keep hitting the monitor domain, every request still counts agains
 **Requirements**
 
 - The domain is hosted on Cloudflare and bound to the Worker.
-- Agent version ≥ `1.1.1`, Workers version ≥ `2.8.7`.
+- This applies to Leon Edition `v0.1.0` or newer and requires Agent version `1.1.1` or newer.
 
 **Steps**
 
@@ -521,12 +485,9 @@ Third-party themes only proxy `index.html` and `assets/` from the theme reposito
 
 ### Upgrade Worker
 
-If you deployed from a fork, sync the fork with upstream to trigger redeployment:
+Download the desired version from this project's [GitHub Releases](https://github.com/leon4z/cf-server-monitor-leon/releases), keep the existing Worker name, D1 binding and secrets, then rebuild and deploy. The panel checks this repository for stable releases. The Go Agent uses its upstream installation and update sources.
 
-- Manual sync: click Sync fork -> Update branch in your GitHub repository.
-- Automatic sync: enable the `Upstream Sync` workflow. It checks upstream updates daily at UTC 00:00.
-
-For one-click deployment, redeploy to the same project or migrate to a fork-based deployment.
+When migrating from the upstream panel, keep the original Worker and a data backup while testing import, history, and Agent reporting on a separate instance.
 
 ### Upgrade Agent
 
@@ -595,7 +556,7 @@ After upgrading from older versions to versions with GPU, disk IO, packet loss, 
 
 ### Requirements
 
-- Node.js 18+
+- Node.js 22+
 - npm
 - Wrangler 4
 
@@ -603,19 +564,20 @@ After upgrading from older versions to versions with GPU, disk IO, packet loss, 
 
 ```bash
 # Install dependencies
-npm install
+npm ci
 
-# Create D1 database for the first time
-npx wrangler d1 create server-monitor-db
+# Configure API_SECRET for the local Worker
+cp .dev.vars.example .dev.vars
+# Set a development-only API_SECRET in .dev.vars
+
+# Build the Worker assets
+npm run build:frontend
 
 # Start local Worker, default https://localhost:8787
 npm run dev
 
-# Start frontend-only Vite dev server, default http://localhost:5173
+# Start frontend-only Vite dev server, default https://localhost:5173
 npm run dev:frontend
-
-# Build frontend
-npm run build:frontend
 
 # Deploy to Cloudflare Workers
 npm run deploy
@@ -627,17 +589,13 @@ npm run test:history-query
 npm run test:agent-config
 ```
 
-Local `.env` requires at least:
-
-```bash
-API_SECRET=123456
-```
+Set a development-only `API_SECRET` in `.dev.vars`. Vite serves the frontend over HTTPS by default.
 
 ### Mock Data
 
 ```bash
 node test/generate-sql.js
-wrangler d1 execute server-monitor-db --file=test/mock-data.sql
+npm exec -- wrangler d1 execute DB --local --file=test/mock-data.sql
 ```
 
 See [test/README.md](test/README.md) for more local testing notes.
@@ -698,7 +656,7 @@ Remove the debug parameter and reinstall after troubleshooting to avoid excessiv
 
 ### How do I change `API_SECRET`?
 
-Update `API_SECRET` in Cloudflare, redeploy the Worker, then copy and run the install command again on every server. If you deploy through GitHub Actions, update the GitHub Secret as well.
+Update `API_SECRET` in Cloudflare and redeploy the Worker, then copy and run the Agent install command again on every monitored server.
 
 Due to the current Cloudflare version issue, you may need to temporarily modify the value and save it once, then change it back to the original value and save again to trigger a new deployment.
 
@@ -714,7 +672,7 @@ If the image URL redirects or goes through a CDN redirect, open the browser deve
 
 ### I forgot the admin password
 
-Open the Cloudflare D1 database `server-monitor-db`, edit the `setting` table, and update the `password` field in `site_options`. The legacy MD5-compatible value `e10adc3949ba59abbe56e057f20f883e` maps to password `123456`. Log in with it and set a strong password in the admin panel.
+Open the Cloudflare D1 database `cf-server-monitor-leon-db`, edit the `setting` table, and update the `password` field in `site_options`. The legacy MD5-compatible value `e10adc3949ba59abbe56e057f20f883e` maps to password `123456`. Log in with it and set a strong password in the admin panel.
 
 
 ### Domains not hosted on Cloudflare cannot be bound
@@ -740,6 +698,8 @@ Check whether the server uses a proxy. On OpenWrt or router systems, some proxy 
 The frontend may display Hong Kong, Macao, Taiwan, and country/region information side by side. The map follows the standard map reviewed by China's Ministry of Natural Resources, review number GS(2023)2767.
 
 ## Screenshots
+
+These upstream screenshots show the shared dashboard interface.
 
 <details>
 <summary>Dark Theme</summary>
@@ -773,25 +733,9 @@ The frontend may display Hong Kong, Macao, Taiwan, and country/region informatio
 - [theme-ai-prompt.md](theme-ai-prompt.md): Theme development AI prompt — paste it into an AI assistant to build themes that follow project rules
 - [test/README.md](test/README.md): Local mock data and testing workflow
 
-## Community
+## Feedback
 
-- Telegram group: <https://t.me/cfServerMonitor>
-- Live demo: <https://demo.huilang.me/>
-
-## Support
-
-If this project is helpful to you, you can support future maintenance through the options below.
-
-<p>
-  <img src="./donate/wechat-reward.jpg" alt="WeChat appreciation code" width="215">
-</p>
-
-- WeChat appreciation: scan the QR code
-
-### Partners & Recommendations
-
-If you need airport transfers, business transportation, or private chauffeur services in the Greater Bay Area, you can consider [Hong Kong Chauffeur](https://hkchauffeur.com/), serving Hong Kong, Shenzhen, Guangzhou, Zhuhai, Macau, and other major cities in the region.
-
+Report issues and suggest improvements for Leon Edition in [this repository](https://github.com/leon4z/cf-server-monitor-leon/issues).
 
 ## Credits
 
@@ -805,4 +749,4 @@ If you need airport transfers, business transportation, or private chauffeur ser
 
 ## License
 
-MIT License
+[MIT License](LICENSE), with upstream copyright preserved. JetBrains Mono is distributed with its [SIL Open Font License](public/files/jetbrains-mono-OFL.txt).

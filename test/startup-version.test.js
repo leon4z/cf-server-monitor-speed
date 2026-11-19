@@ -61,11 +61,16 @@ test('startup config stays responsive while the authenticated version request is
     assert.equal(config.is_public, false);
     assert.equal(config.last_workers_version, null);
 
-    for (const item of pending) item.resolve(Response.json(item.url.includes('api.github.com') ? { tag_name: 'v9.0.0' } : { workers: '9.0.0' }));
+    assert.deepEqual(pending.map(item => item.url), [
+      'https://api.github.com/repos/leon4z/cf-server-monitor-leon/releases/latest',
+      'https://api.github.com/repos/huilang-me/cfsm-agent/releases/latest'
+    ]);
+    pending[0].resolve(Response.json({ tag_name: 'v9.0.0' }));
+    pending[1].resolve(Response.json({ tag_name: 'v1.1.3' }));
     const versionResponse = await versionRequest;
     assert.equal(versionResponse.status, 200);
     assert.equal(versionResponse.headers.get('Cache-Control'), 'private, no-store');
-    assert.deepEqual(await versionResponse.json(), { version: CURRENT_VERSION, last_workers_version: '9.0.0', last_agent_version: 'v9.0.0' });
+    assert.deepEqual(await versionResponse.json(), { version: CURRENT_VERSION, last_workers_version: '9.0.0', last_agent_version: 'v1.1.3' });
     const cached = await worker.fetch(request('/api/config'), env, {});
     assert.equal((await cached.json()).last_workers_version, '9.0.0');
     await worker.fetch(request('/api/version'), env, {});
