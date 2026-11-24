@@ -19,7 +19,9 @@ export const DEFAULT_SERVER_CARD_CONFIG = {
   display_mode: 'bar'
 }
 
-// 首页三网面板的候选节点，按展示优先级排列；loss 末条为 false（后台设为 0）时跳过。
+const HOME_PROBE_LIMIT = 6
+
+// 首页优先显示有采样的线路。保留原三网的空状态。
 const THREE_NET_DEFS = [
   { key: 'ct', pingField: 'ping_ct', lossField: 'loss_ct', nameKey: 'custom_ct_name', labelKey: 'pingCt', fallbackLabel: 'CT' },
   { key: 'cu', pingField: 'ping_cu', lossField: 'loss_cu', nameKey: 'custom_cu_name', labelKey: 'pingCu', fallbackLabel: 'CU' },
@@ -373,9 +375,21 @@ export function useServerCardData(props) {
     return normalizeProbeMetricValue(last[key]) === false
   }
 
-  const buildThreeNetRow = (def) => {
+  const probeLabel = (def) => {
     const customName = props.sysConfig?.[def.nameKey]
-    const label = String(customName || trans.value[def.labelKey] || def.fallbackLabel)
+    return String(customName || trans.value[def.labelKey] || def.fallbackLabel)
+  }
+
+  const reportedProbes = computed(() => THREE_NET_DEFS.filter(def => {
+    if (isDisabledByLatestLoss(def.key)) return false
+    if (isPingValid(props.server[def.pingField]) ||
+        typeof normalizeProbeMetricValue(props.server[def.lossField]) === 'number') return true
+    return getLatencySeries('loss', def.key).some(point => typeof point.value === 'number') ||
+      getLatencySeries('ping', def.key).some(point => isPingValid(point.value))
+  }).slice(0, HOME_PROBE_LIMIT))
+
+  const buildThreeNetRow = (def) => {
+    const label = probeLabel(def)
     const pingSeries = getLatencySeries('ping', def.key)
     const lossSeries = getLatencySeries('loss', def.key)
     const pointCount = Math.max(pingSeries.length, lossSeries.length, getLatencyWindowPointCount())
@@ -419,27 +433,21 @@ export function useServerCardData(props) {
   }
 
   const threeNetDetails = computed(() => {
-    const enabled = []
-    const disabled = []
-    for (const def of THREE_NET_DEFS) {
-      (isDisabledByLatestLoss(def.key) ? disabled : enabled).push(def)
-    }
-    // 启用的节点优先且保持原顺序；不足 3 个时用禁用节点按原顺序补位
-    return [...enabled, ...disabled].slice(0, 3).map(buildThreeNetRow)
+    const reported = reportedProbes.value
+    const placeholderCount = Math.max(0, 3 - reported.length)
+    const placeholders = THREE_NET_DEFS.slice(0, 3)
+      .filter(def => !reported.includes(def))
+      .slice(0, placeholderCount)
+    return [...reported, ...placeholders].map(buildThreeNetRow)
   })
 
   const hasThreeNetDetails = computed(() => threeNetDetails.value.length > 0)
 
-  const pingList = computed(() => [
-    { label: 'CT', value: props.server.ping_ct },
-    { label: 'CU', value: props.server.ping_cu },
-    { label: 'CM', value: props.server.ping_cm },
-    { label: 'BGP', value: props.server.ping_bd },
-    { label: props.server.node_1_name || 'Node 1', value: props.server.ping_node_1 },
-    { label: props.server.node_2_name || 'Node 2', value: props.server.ping_node_2 },
-    { label: props.server.node_3_name || 'Node 3', value: props.server.ping_node_3 },
-    { label: props.server.node_4_name || 'Node 4', value: props.server.ping_node_4 }
-  ].filter(ping => !isPingDisabled(ping.value)))
+  const pingList = computed(() => reportedProbes.value.map(def => ({
+    key: def.key,
+    label: probeLabel(def),
+    value: props.server[def.pingField]
+  })))
 
   const hasPingData = computed(() => pingList.value.length > 0)
 

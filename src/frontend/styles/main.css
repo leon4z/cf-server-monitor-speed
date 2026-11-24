@@ -1523,6 +1523,7 @@ body::before {
 /* Ping row — ring card */
 .server-card-ping-row {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 8px;
     margin-top: 12px;
@@ -1639,6 +1640,7 @@ body::before {
    -------------------------------------------------------------------------- */
 .ping-panel {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     gap: 4px;
     padding: 8px;
